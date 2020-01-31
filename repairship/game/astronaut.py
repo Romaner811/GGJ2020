@@ -1,6 +1,7 @@
 import os
 import pygame
 from pygame.rect import Rect
+from pygame.locals import *
 
 from repairship.core.gameapp import EVENT_ID_SONG_END
 from repairship.core import pixelgameapp
@@ -8,7 +9,7 @@ from repairship.core.sizes import Size
 from repairship.graphics.animation import Animation
 from repairship.game.character import Character, PhysicalObject
 from repairship.game.character_control import CharacterControl
-
+from repairship.units import UnitTranslator
 
 ASSETS_PATH = r"assets"
 
@@ -18,35 +19,53 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         super(AstronautApp, self).__init__(size, *args, **kwargs)
 
         sheet = pygame.image.load(os.path.join(ASSETS_PATH, "img", "astronaut", "walking.png"))
-        self.astronaut_animation = Animation(sheet, Size(7, 16), self.tick_interval)
+        astronaut_image_size = Size(7, 16)
+        self.astronaut_animation = Animation(sheet, astronaut_image_size, 300)
+
+        screen_center = self.screen.get_rect().center
+        self.unit_translator = UnitTranslator(Size(*self.screen.get_size()), Size(*screen_center))
 
         self.error_sound = pygame.mixer.Sound(os.path.join(ASSETS_PATH, "audio", "error.wav"))
 
         self.player_control = CharacterControl()
-        # TODO: config.... json?
-        from unittest import mock
+        astronaut_rect = Rect((0, 0), astronaut_image_size.get_pair())
+        astronaut_rect.center = screen_center
+        astronaut_rect = self.unit_translator.rect_to_world(astronaut_rect)
         self.astronaut = Character(
-            PhysicalObject(self.astronaut_animation.get_frame(0).get_rect()),
-            mock.Mock(speed=Size(2, 1)),
+            PhysicalObject(astronaut_rect),
+            {"speed": Size(20000, 0)},
             self.player_control
         )
-        self.astronaut.hitbox.center = self.screen.get_rect().center
 
         self.init_player_control()
         self.start_music()
 
-    def init_player_control(self):
-        # keyboard events -> player_control
-        # self.event_subscribe(...)
-        pass
+        self.event_subscribe(KEYDOWN, self.on_key_down)
+        self.event_subscribe(KEYUP, self.on_key_up)
 
-    def translate_rect(self, logic_rect):
-        return pygame.rect.Rect(
-            logic_rect.x,
-            self.screen.get_height() - logic_rect.y - logic_rect.height,
-            logic_rect.width,
-            logic_rect.height
-        )
+    def on_key_down(self, event):
+        if event.key == K_w:
+            self.player_control.movement.y = 1
+        elif event.key == K_s:
+            self.player_control.movement.y = -1
+        elif event.key == K_d:
+            self.player_control.movement.x = 1
+        elif event.key == K_a:
+            self.player_control.movement.x = -1
+        elif event.key == K_e:
+            self.player_control.interacting = True
+
+    def on_key_up(self, event):
+        if event.key == K_w:
+            self.player_control.movement.y = 0
+        elif event.key == K_s:
+            self.player_control.movement.y = 0
+        elif event.key == K_d:
+            self.player_control.movement.x = 0
+        elif event.key == K_a:
+            self.player_control.movement.x = 0
+        elif event.key == K_e:
+            self.player_control.interacting = False
 
     def start_music(self):
         """
@@ -64,9 +83,12 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         pygame.mixer.music.play(start=52.664)
 
     def on_frame(self, event):
-        # draw the character in the correct position.
+        self.astronaut.update(pygame.time.get_ticks())
+
         player_image = self.astronaut_animation.get_frame_at(pygame.time.get_ticks())
-        translated_rect = self.translate_rect(self.astronaut.hitbox)
+        translated_rect = self.unit_translator.rect_to_screen(self.astronaut.hitbox)
+        print("screenastro", translated_rect)
+        self.screen.fill((0, 0, 0))
         self.screen.blit(player_image, translated_rect)
 
         self.flush_screen()

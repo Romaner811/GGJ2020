@@ -8,10 +8,16 @@ class PhysicalObject:
 
         self.hitbox = hitbox
         self.velocity = velocity
+        self._last_time = 0
 
     def update(self, time):
-        self.hitbox.x += self.velocity.x * time
-        self.hitbox.y += self.velocity.y * time
+        diff = (time - self._last_time) / 1000.0
+        self.hitbox.move_ip(self.velocity.x * diff, self.velocity.y * diff)
+        self._last_time = time
+
+        print("diff", diff)
+        print("vel", self.velocity.get_pair())
+        print("hb", self.hitbox)
 
     def collision(self, other):
         pass
