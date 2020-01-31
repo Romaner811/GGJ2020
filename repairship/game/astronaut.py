@@ -20,7 +20,7 @@ class AstronautApp(pixelgameapp.PixelGameApp):
 
         sheet = pygame.image.load(os.path.join(ASSETS_PATH, "img", "astronaut", "walking.png"))
         astronaut_image_size = Size(7, 16)
-        self.astronaut_animation = Animation(sheet, astronaut_image_size, 300)
+        self.astronaut_animation = Animation(sheet, astronaut_image_size, 7)
 
         screen_center = self.screen.get_rect().center
         self.unit_translator = UnitTranslator(Size(*self.screen.get_size()), Size(*screen_center))

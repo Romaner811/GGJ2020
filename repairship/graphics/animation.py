@@ -2,7 +2,7 @@ from repairship.graphics import graphics_utils
 
 
 class Animation:
-    def __init__(self, sheet, size, speed):
+    def __init__(self, sheet, size, fps):
         """
 
         :type sheet: pygame.Surface
@@ -10,7 +10,8 @@ class Animation:
         """
         self.sheet = sheet
         self.size = size
-        self.speed = speed
+        self.fps = fps
+        self.interval = 1000.0 / fps
 
         self.frames_amount = int(self.sheet.get_width() / self.size.width)
 
@@ -30,7 +31,7 @@ class Animation:
         return self._frames[idx]
 
     def get_frame_idx_at(self, time):
-        return int(time / self.speed) % self.frames_amount
+        return int(time / self.interval) % self.frames_amount
 
     def get_frame_at(self, time):
         idx = self.get_frame_idx_at(time)
