@@ -15,9 +15,5 @@ class PhysicalObject:
         self.hitbox.move_ip(self.velocity.x * diff, self.velocity.y * diff)
         self._last_time = time
 
-        print("diff", diff)
-        print("vel", self.velocity.get_pair())
-        print("hb", self.hitbox)
-
     def collision(self, other):
         pass

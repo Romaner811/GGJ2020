@@ -47,13 +47,15 @@ class AstronautApp(pixelgameapp.PixelGameApp):
 
     def on_key_down(self, event):
         if event.key == K_w:
-            self.player_control.movement.y = 1
+            self.player_control.movement.y += 1
         elif event.key == K_s:
-            self.player_control.movement.y = -1
+            self.player_control.movement.y += -1
         elif event.key == K_d:
+            self.player_control.movement.x += 1
             self.player_control.movement.x = 1
             self.flipped = False
         elif event.key == K_a:
+            self.player_control.movement.x += -1
             self.player_control.movement.x = -1
             self.flipped = True
         elif event.key == K_e:
@@ -61,13 +63,13 @@ class AstronautApp(pixelgameapp.PixelGameApp):
 
     def on_key_up(self, event):
         if event.key == K_w:
-            self.player_control.movement.y = 0
+            self.player_control.movement.y -= 1
         elif event.key == K_s:
-            self.player_control.movement.y = 0
+            self.player_control.movement.y -= -1
         elif event.key == K_d:
-            self.player_control.movement.x = 0
+            self.player_control.movement.x -= 1
         elif event.key == K_a:
-            self.player_control.movement.x = 0
+            self.player_control.movement.x -= -1
         elif event.key == K_e:
             self.player_control.interacting = False
 
@@ -79,7 +81,7 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         pygame.mixer.music.load(os.path.join(ASSETS_PATH, "audio", "bt.ogg"))
         pygame.mixer.music.play()
         self.event_subscribe(EVENT_ID_SONG_END, self.continue_music)
-    
+
     def continue_music(self, event):
         """
         Restarts the music from the loop point.
@@ -91,7 +93,6 @@ class AstronautApp(pixelgameapp.PixelGameApp):
 
         player_image = self.astronaut_animation.get_frame_at(pygame.time.get_ticks())
         translated_rect = self.unit_translator.rect_to_screen(self.astronaut.hitbox)
-        print("screenastro", translated_rect)
         self.screen.fill((0, 0, 0))
         self.screen.blit(pygame.transform.flip(player_image, self.flipped, False), translated_rect)
 
