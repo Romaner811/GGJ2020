@@ -1,13 +1,11 @@
 import sys
-from repairship.game.ball import BouncingBallApp
+from repairship.game.astronaut import AstronautApp
 from repairship.core.sizes import Size
 
 
 def main(args):
-    app = BouncingBallApp(
+    app = AstronautApp(
         size=Size(800, 600),
-        speed=Size(2, 2),
-        bg=(0xFF, 0xFF, 0xFF),
         fps=10  # DEBUG
     )
 
