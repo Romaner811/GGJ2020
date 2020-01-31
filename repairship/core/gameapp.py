@@ -7,25 +7,27 @@ from pygame.locals import *
 
 DEFAULT_FPS = 60
 
-
 EVENT_ID_ANY = USEREVENT + 1
 EVENT_ID_FRAME = USEREVENT + 2
 EVENT_ID_UPDATE = USEREVENT + 3
 
 
-class GameApp:
-    __metaclass__ = abc.ABCMeta
+class GameApp(abc.ABC):
+    def __init__(self, size, fps=None):
+        if fps is None:
+            fps = DEFAULT_FPS
 
-    def __init__(self, size, fps=DEFAULT_FPS):
-        pygame.init()
         self.size = size
-        self.screen = pygame.display.set_mode(size.get_pair())
         self.tick_interval = int(1000 / fps)
 
         self._is_running = False
         self._listeners = collections.defaultdict(list)
+
         self.event_subscribe(EVENT_ID_ANY, self.on_event)
         self.event_subscribe(EVENT_ID_FRAME, self.on_frame)
+
+        pygame.init()
+        self.screen = pygame.display.set_mode(size.get_pair())
 
     def event_subscribe(self, event_type, handler_func):
         self._listeners[event_type].append(handler_func)
@@ -39,6 +41,9 @@ class GameApp:
 
     def on_exit(self, event):
         return True
+
+    def flush_screen(self):
+        pygame.display.flip()
 
     def _execute_event_handlers(self, handlers, event):
         if handlers is None:
@@ -71,7 +76,6 @@ class GameApp:
         self._is_running = False
 
     def run(self):
-
         try:
             self.start()
             while self._is_running:
@@ -79,3 +83,6 @@ class GameApp:
                 self._handle_event(event)
         finally:
             self.stop()
+
+    def __del__(self):
+        pygame.quit()

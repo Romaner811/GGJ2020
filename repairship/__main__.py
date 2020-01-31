@@ -1,25 +1,14 @@
 import sys
 from repairship.game.ball import BouncingBallApp
-
-
-# TODO: split to different file.
-class Size:
-    def __init__(self, width, height):
-        self.x = self.width = width
-        self.y = self.height = height
-
-    def get_pair(self):
-        return self.x, self.y
-
-    def __iter__(self):
-        return iter(self.get_pair())
+from repairship.core.sizes import Size
 
 
 def main(args):
     app = BouncingBallApp(
         size=Size(800, 600),
         speed=Size(2, 2),
-        bg=(0xFF, 0xFF, 0xFF)
+        bg=(0xFF, 0xFF, 0xFF),
+        fps=10  # DEBUG
     )
 
     errlvl = app.run()
