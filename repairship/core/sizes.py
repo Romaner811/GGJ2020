@@ -1,3 +1,5 @@
+# TODO: USE pygame.Vector2
+
 import enum
 
 

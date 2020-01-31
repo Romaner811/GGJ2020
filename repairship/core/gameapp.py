@@ -50,11 +50,7 @@ class GameApp(abc.ABC):
             return
 
         for handler in handlers:
-            try:
-                handler(event)
-            except RuntimeError as e:
-                # TODO: exc handling
-                pass
+            handler(event)
 
     def _handle_event(self, event):
         if event.type == pygame.QUIT:

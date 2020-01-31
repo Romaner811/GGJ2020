@@ -11,7 +11,7 @@ class Character(PhysicalObject):
         self.controls = controls
 
     def update(self, time):
-        self.velocity = self.controls.movement(self.config["speed"])
+        self.velocity = self.controls.movement.multiply(self.config["speed"])
         super(Character, self).update(time)
 
     def collision(self, other):

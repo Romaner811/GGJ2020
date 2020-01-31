@@ -14,7 +14,7 @@ class Animation:
 
         self.frames_amount = int(self.sheet.get_width() / self.size.width)
 
-        self.frames = self.init_fames()
+        self._frames = self.init_fames()
 
     def init_fames(self):
         frames = list()
@@ -27,12 +27,12 @@ class Animation:
         return frames
 
     def get_frame(self, idx):
-        return self.frames[idx]
+        return self._frames[idx]
 
     def get_frame_idx_at(self, time):
         return int(time / self.speed) % self.frames_amount
 
     def get_frame_at(self, time):
         idx = self.get_frame_idx_at(time)
-        frame = self.frames[idx]
+        frame = self.get_frame(idx)
         return frame

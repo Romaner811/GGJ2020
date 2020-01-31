@@ -6,7 +6,7 @@ from repairship.core.sizes import Size
 def main(args):
     app = AstronautApp(
         size=Size(800, 600),
-        fps=10  # DEBUG
+        fps=60  # DEBUG
     )
 
     errlvl = app.run()
