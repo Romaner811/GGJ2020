@@ -9,7 +9,7 @@ from repairship.game.character import Character, PhysicalObject
 from repairship.game.character_control import CharacterControl
 
 
-ASSETS_PATH = r".\assets"
+ASSETS_PATH = r"assets"
 
 
 class AstronautApp(pixelgameapp.PixelGameApp):
