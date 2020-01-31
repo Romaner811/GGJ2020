@@ -2,6 +2,7 @@ import os
 import pygame
 from pygame.rect import Rect
 
+from repairship.core.gameapp import EVENT_ID_SONG_END
 from repairship.core import pixelgameapp
 from repairship.core.sizes import Size
 from repairship.graphics.animation import Animation
@@ -19,6 +20,8 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         sheet = pygame.image.load(os.path.join(ASSETS_PATH, "astronaut", "walking.png"))
         self.astronaut_animation = Animation(sheet, Size(7, 16), self.tick_interval)
 
+        self.error_sound = pygame.mixer.Sound(os.path.join(ASSETS_PATH, "audio", "error.wav"))
+
         self.player_control = CharacterControl()
         # TODO: config.... json?
         from unittest import mock
@@ -30,6 +33,7 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         self.astronaut.hitbox.center = self.screen.get_rect().center
 
         self.init_player_control()
+        self.start_music()
 
     def init_player_control(self):
         # keyboard events -> player_control
@@ -43,6 +47,21 @@ class AstronautApp(pixelgameapp.PixelGameApp):
             logic_rect.width,
             logic_rect.height
         )
+
+    def start_music(self):
+        """
+        Starts the music from the beginning.
+        """
+        pygame.mixer.music.set_endevent(EVENT_ID_SONG_END)
+        pygame.mixer.music.load(os.path.join(ASSETS_PATH, "audio", "bt.ogg"))
+        pygame.mixer.music.play()
+        self.event_subscribe(EVENT_ID_SONG_END, self.continue_music)
+    
+    def continue_music(self, event):
+        """
+        Restarts the music from the loop point.
+        """
+        pygame.mixer.music.play(start=52.664)
 
     def on_frame(self, event):
         # draw the character in the correct position.
