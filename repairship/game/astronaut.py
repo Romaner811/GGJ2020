@@ -17,7 +17,7 @@ class AstronautApp(pixelgameapp.PixelGameApp):
     def __init__(self, size, *args, **kwargs):
         super(AstronautApp, self).__init__(size, *args, **kwargs)
 
-        sheet = pygame.image.load(os.path.join(ASSETS_PATH, "astronaut", "walking.png"))
+        sheet = pygame.image.load(os.path.join(ASSETS_PATH, "img", "astronaut", "walking.png"))
         self.astronaut_animation = Animation(sheet, Size(7, 16), self.tick_interval)
 
         self.error_sound = pygame.mixer.Sound(os.path.join(ASSETS_PATH, "audio", "error.wav"))
