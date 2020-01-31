@@ -37,7 +37,6 @@ class AstronautApp(pixelgameapp.PixelGameApp):
             self.player_control
         )
 
-        self.init_player_control()
         self.start_music()
 
         self.event_subscribe(KEYDOWN, self.on_key_down)
@@ -52,11 +51,9 @@ class AstronautApp(pixelgameapp.PixelGameApp):
             self.player_control.movement.y += -1
         elif event.key == K_d:
             self.player_control.movement.x += 1
-            self.player_control.movement.x = 1
             self.flipped = False
         elif event.key == K_a:
             self.player_control.movement.x += -1
-            self.player_control.movement.x = -1
             self.flipped = True
         elif event.key == K_e:
             self.player_control.interacting = True
