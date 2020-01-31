@@ -37,6 +37,8 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         self.event_subscribe(KEYDOWN, self.on_key_down)
         self.event_subscribe(KEYUP, self.on_key_up)
 
+        self.flipped = False
+
     def on_key_down(self, event):
         if event.key == K_w:
             self.player_control.movement.y = 1
@@ -44,8 +46,10 @@ class AstronautApp(pixelgameapp.PixelGameApp):
             self.player_control.movement.y = -1
         elif event.key == K_d:
             self.player_control.movement.x = 1
+            self.flipped = False
         elif event.key == K_a:
             self.player_control.movement.x = -1
+            self.flipped = True
         elif event.key == K_e:
             self.player_control.interacting = True
 
@@ -68,6 +72,6 @@ class AstronautApp(pixelgameapp.PixelGameApp):
         translated_rect = self.unit_translator.rect_to_screen(self.astronaut.hitbox)
         print("screenastro", translated_rect)
         self.screen.fill((0, 0, 0))
-        self.screen.blit(player_image, translated_rect)
+        self.screen.blit(pygame.transform.flip(player_image, self.flipped, False), translated_rect)
 
         self.flush_screen()
