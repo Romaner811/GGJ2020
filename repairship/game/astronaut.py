@@ -88,7 +88,8 @@ class AstronautApp(pixelgameapp.PixelGameApp):
     def on_frame(self, event):
         self.astronaut.update(pygame.time.get_ticks())
 
-        player_image = self.astronaut_animation.get_frame_at(pygame.time.get_ticks())
+        player_image = self.astronaut_animation.get_frame(1) if self.player_control.movement.x == 0 else \
+            self.astronaut_animation.get_frame_at(pygame.time.get_ticks())
         translated_rect = self.unit_translator.rect_to_screen(self.astronaut.hitbox)
         self.screen.fill((0, 0, 0))
         self.screen.blit(pygame.transform.flip(player_image, self.flipped, False), translated_rect)
